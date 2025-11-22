@@ -35,8 +35,8 @@ TIMEINFO=$(date +"%s")
 ${BIN} -c ${SERVERS} -p ${PORTS} -P ${CLIENTS} ${IPVx} ${FORMAT} > ${TMP_LOG}
 
 if [ $? -eq 0 ]; then
-	sender="$(cat $TMP_LOG | grep '[SUM]' | tail -n2 | grep sender)"
-	#receiver="$(cat $TMP_LOG | grep '[SUM]' | tail -n2 | grep receiver)"
+	#sender="$(cat $TMP_LOG | grep '[SUM]' | tail -n2 | grep sender)"
+	receiver="$(cat $TMP_LOG | grep '[SUM]' | tail -n2 | grep receiver)"
 
 	#sp_snd="$(echo $sender | awk '{print $6}')"
 	sp_rcv="$(echo $receiver | awk '{print $6}')"
