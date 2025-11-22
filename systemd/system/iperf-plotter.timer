@@ -1,0 +1,7 @@
+[Unit]
+Description=Hourly measurement of network bandwidth
+Documentation=
+
+[Timer]
+OnBootSec=15min
+OnUnitActiveSec=1h
