@@ -9,8 +9,8 @@ LOGFILE_UL="${LOGFILE}_ul.log"
 LOGFILE_DL="${LOGFILE}_dl.log"
 
 # Which servers and corresponding ports
-#SERVERS="ping6.online.net"
-SERVERS="localhost"
+SERVERS="ping6.online.net"
+#SERVERS="localhost"
 PORTS="5209"
 
 # IPv4 or IPv6"
@@ -31,34 +31,35 @@ TMP_LOG=$(mktemp)
 # Timestamp
 TIMEINFO=$(date +"%s")
 
-# Normal mode
+# Normal mode: Server (remote) sends data to client (local)
 ${BIN} -c ${SERVERS} -p ${PORTS} -P ${CLIENTS} ${IPVx} ${FORMAT} > ${TMP_LOG}
 
 if [ $? -eq 0 ]; then
 	sender="$(cat $TMP_LOG | grep '[SUM]' | tail -n2 | grep sender)"
-	receiver="$(cat $TMP_LOG | grep '[SUM]' | tail -n2 | grep receiver)"
+	#receiver="$(cat $TMP_LOG | grep '[SUM]' | tail -n2 | grep receiver)"
 
-	sp_snd="$(echo $sender | awk '{print $6}')"
+	#sp_snd="$(echo $sender | awk '{print $6}')"
 	sp_rcv="$(echo $receiver | awk '{print $6}')"
 
-	sz_snd="$(echo $sender | awk '{print $4}')"
+	#sz_snd="$(echo $sender | awk '{print $4}')"
 	sz_rcv="$(echo $receiver | awk '{print $4}')"
 
-	echo -ne "${TIMEINFO}\t${SERVERS}\t${sz_snd}\t${sz_rcv}\t${sp_snd}\t${sp_rcv}\t${IPVx}\tN\n" >> $LOGFILE_UL
+	echo -ne "${TIMEINFO}\t${SERVERS}\t${sz_rcv}\t${sp_rcv}\t${IPVx}\tN\n" >> $LOGFILE_UL
 fi
 
+# Reverse mode: Client (local) sends data to server (remote)
 ${BIN} -c ${SERVERS} -p ${PORTS} -P ${CLIENTS} ${IPVx} ${FORMAT} -R > ${TMP_LOG}
 if [ $? -eq 0 ]; then
 	sender="$(cat $TMP_LOG | grep '[SUM]' | tail -n2 | grep sender)"
-	receiver="$(cat $TMP_LOG | grep '[SUM]' | tail -n2 | grep receiver)"
+	#receiver="$(cat $TMP_LOG | grep '[SUM]' | tail -n2 | grep receiver)"
 
 	sp_snd="$(echo $sender | awk '{print $6}')"
-	sp_rcv="$(echo $receiver | awk '{print $6}')"
+	#sp_rcv="$(echo $receiver | awk '{print $6}')"
 
 	sz_snd="$(echo $sender | awk '{print $4}')"
-	sz_rcv="$(echo $receiver | awk '{print $4}')"
+	#sz_rcv="$(echo $receiver | awk '{print $4}')"
 
-	echo -ne "${TIMEINFO}\t${SERVERS}\t${sz_snd}\t${sz_rcv}\t${sp_snd}\t${sp_rcv}\t${IPVx}\tR\n" >> $LOGFILE_DL
+	echo -ne "${TIMEINFO}\t${SERVERS}\t${sz_snd}\t${sp_snd}\t${IPVx}\tR\n" >> $LOGFILE_DL
 fi
 
 rm ${TMP_LOG}
